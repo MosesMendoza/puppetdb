@@ -36,8 +36,11 @@ end
   Rake::Task[task].clear if Rake::Task.task_defined?(task)
 end
 
-# We establish variables used in the puppetdb tasks before hand
-if (@build and @build.build_pe) || (ENV['PE_BUILD'] and ENV['PE_BUILD'].downcase == 'true')
+# We establish variables used in the puppetdb tasks before hand. These
+# variables are defined by the packaging repo, which has by now populated them
+# with data from puppetdb's ext/build_defaults.yaml, ext/project_data.yaml
+# files and its git describe.
+if (Pkg::Config and Pkg::Config.build_pe) || (ENV['PE_BUILD'] and ENV['PE_BUILD'].downcase == 'true')
   @pe = TRUE
   ENV['PATH'] = "/opt/puppet/bin:" + ENV['PATH']
 else
