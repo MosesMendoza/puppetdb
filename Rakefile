@@ -42,9 +42,11 @@ end
 # files and its git describe.
 if (defined?(Pkg) and defined?(Pkg::Config) and Pkg::Config.build_pe) || (ENV['PE_BUILD'] and ENV['PE_BUILD'].downcase == 'true')
   @pe = TRUE
+  Pkg::Config.project = "pe-puppetdb"
   ENV['PATH'] = "/opt/puppet/bin:" + ENV['PATH']
 else
   @pe = FALSE
+  Pkg::Config.project = "puppetdb"
 end
 
 if defined?(Pkg) and defined?(Pkg::Config)
