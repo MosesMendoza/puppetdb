@@ -40,11 +40,22 @@ end
 # variables are defined by the packaging repo, which has by now populated them
 # with data from puppetdb's ext/build_defaults.yaml, ext/project_data.yaml
 # files and its git describe.
-if (Pkg::Config and Pkg::Config.build_pe) || (ENV['PE_BUILD'] and ENV['PE_BUILD'].downcase == 'true')
+if (defined?(Pkg) and defined?(Pkg::Config) and Pkg::Config.build_pe) || (ENV['PE_BUILD'] and ENV['PE_BUILD'].downcase == 'true')
   @pe = TRUE
   ENV['PATH'] = "/opt/puppet/bin:" + ENV['PATH']
 else
   @pe = FALSE
+end
+
+if defined?(Pkg) and defined?(Pkg::Config)
+  @version = Pkg::Config.version
+else
+  @version = %x{git describe --always --dirty}
+  if $?.success?
+    @version.chomp!
+  else
+    @version = "0.0-dev-build"
+  end
 end
 
 if @pe
